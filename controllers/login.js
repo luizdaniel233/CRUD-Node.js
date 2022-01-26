@@ -8,7 +8,7 @@ module.exports = app =>{
         login.logon(email,password,res)
     })
 
-    app.post("/logout/",verifyJWT,(req,res) => {
+    app.post("/logout/",(req,res) => {
         
         res.status(200).json({auth:false,token:null})
     })

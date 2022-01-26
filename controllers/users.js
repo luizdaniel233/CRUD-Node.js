@@ -1,4 +1,5 @@
 const controlUser = require('../models/controlUser')
+const system =  require('../models/create')
 const { verifyJWT } = require('../models/validaData');
 module.exports = app =>{
 
@@ -11,7 +12,7 @@ module.exports = app =>{
         controlUser.delete(id,res)
     })
 
-    app.post('/signup',verifyJWT, (req,res) => {
+    app.post('/signup', (req,res) => {
         const data = req.body;
         system.createUser(data,res)
     })

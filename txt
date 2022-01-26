@@ -6,27 +6,26 @@ class Create{
 
     async createUser(data,res){
 
-        const dadosUser = {
-            email: data.email, 
-            name: data.name,
-            lastName: data.lastName,        
-            password: data.password,      
-            admin: data.admin
-        }
+        const dadosUser = data
+        const senha = dadosUser.password
         var  sql = `SELECT * FROM User WHERE email = '${dadosUser.email}'`
 
         db.query(sql,async (erro,resultado) => {
-
             if(erro){
                 console.log(erro)
             }else{
 
                 if(resultado.length == 0){
-                    if ((dadosUser.password === data.confirmpassword) && (validaData.validaSenha(dadosUser.password))){
+                    //password  Hash
+                    let npassword = await Create.gerarSenhaHash(dadosUser.password);
+                    let nconfirmpassword = await Create.gerarSenhaHash(dadosUser.confirmpassword);
+                    
+                    
+                    if ((dadosUser.password === dadosUser.confirmpassword) && (validaData.validaSenha(senha))){
                         
                         sql =  'INSERT INTO user SET ?'
-                        dadosUser.password = await Create.gerarSenhaHash(dadosUser.password);
-
+                        dadosUser.password = npassword
+                        dadosUser.confirmpassword = nconfirmpassword
                         db.query(sql,dadosUser,(erro,resultado) => {
                             
                             if(erro){
@@ -40,11 +39,11 @@ class Create{
 
                     }else{
                         console.log("Password and Confirm password isn't equals,or length isn't 8")
-                        res.status(400).json({message:"Password and Confirm password isn't equals,or length isn't 8"})
+                        res.status(422).json({message:"Password and Confirm password isn't equals,or length isn't 8"})
                     }
                 }else{
                     console.log("User already exists!")
-                    res.status(400).json({erro:"User already exists!"})
+                    res.status(200).json({erro:"User already exists!"})
                 }
             }
         })
