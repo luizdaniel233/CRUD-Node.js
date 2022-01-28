@@ -1,6 +1,6 @@
-const expressConfig = require('../config/expressConfig/index')
-const db = require('../database/db')
-const userTable = require('../database/tables/user')
+const expressConfig = require('./config/expressConfig/index')
+const db = require('./database/db')
+const userTable = require('./database/tables/user')
 
 const port = 3001
 const app = expressConfig()
