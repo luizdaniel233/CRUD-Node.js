@@ -1,11 +1,6 @@
 const db = require('mysql2')
+const database = require("./database.json")
 
-const conexao = db.createConnection({
-    host:"localhost",
-    port:3306,
-    user:"root",
-    password:"luiz123",
-    database:"callidus"
-})
+const conexao = db.createConnection(database)
 
 module.exports = conexao

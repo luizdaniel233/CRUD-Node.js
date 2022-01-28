@@ -5,6 +5,7 @@ const consign = require('consign')
 module.exports = () =>{
 
     const app = express()
+    
     var cors = require('cors')
     app.use(cors())
 
