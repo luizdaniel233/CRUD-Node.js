@@ -37,7 +37,8 @@ class controlUser{
     }
 
     async createUser(data,res){
-
+        
+        console.log(data)
         const dadosUser = {
             email: data.email, 
             name: data.name,

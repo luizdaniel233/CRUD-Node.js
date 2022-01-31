@@ -1,13 +1,12 @@
 const db = require('../database/db')
 const bcrypt = require('bcrypt')
-const validador = require('../models/validaData')
 const jwt = require('jsonwebtoken');
 require("dotenv-safe").config();
 
 class Login {
 
-    logon(email,senha,res){
-        let result = []
+    logon(email,senha,res,remoteIp){
+        let result = [] 
         let value = true
         let senhaDB = ''
         
@@ -18,6 +17,7 @@ class Login {
             }else{
                 if(resultado.length == 0){
                     console.log("Email not found!")
+                    return res.status(404).json({error:"Email not found!"})
                 }else{
                     for(let i = 0;i < resultado.length;i++){
                         //console.log('r:',resultado[i])
@@ -28,14 +28,23 @@ class Login {
                             break
                         }
                     }
-                    
+
+                    if(!value){
+                        console.log("Password is wrong!")
+                        return res.status(401).json({error:"Password is wrong!"})
+                    }else{
                     //token
-                    const id = result.id
-                    const token = jwt.sign({id},process.env.SECRET,{
-                        expiresIn: 300 //FIVE MINUTES
-                    })
-                    console.log(token)
-                    return res.status(200).json({auth:true,token:token})
+                        const id = result.id
+                        const token = jwt.sign({id},process.env.SECRET,{
+                            expiresIn: 300 //FIVE MINUTES
+                        })
+                        var dataAccess = {
+                            "ip":remoteIp,
+                            "logado":true
+                        }
+                        console.log(dataAccess)
+                        return res.status(200).json({"dataAccess":dataAccess,auth:true,token:token})
+                    }
                 }
             }
         })
